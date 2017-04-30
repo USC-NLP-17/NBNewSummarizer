@@ -225,6 +225,3 @@ if __name__ == "__main__":
         tSum.generate_sentences()
         tSum.tokenize()
         tSum.print_finalSentence(x,'complete_corpus\\machine_output\\tokenizedSummary' + str(x) + ".txt")
-
-
-

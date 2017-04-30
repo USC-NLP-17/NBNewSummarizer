@@ -13,9 +13,7 @@ priorDict = {}
 
 for line in textfile:
     words = line.split(' ', 1)
-    #words[1] = words[1].replace('.', ' ')
-    #words[1] = words[1].replace(',', ' ')
-    #words[1] = words[1].replace('/', ' ')
+
     review = words[1].split()
     li = " "
     for word in review:
@@ -50,16 +48,40 @@ priorDict["N"] = negative/N
 
 classes = ["Y" , "N"]
 probabilityDict = {}
+totalDict = {}
+totalWords = 0
 for cl in classes:
     countTotal = 0
     reviewIds = [key for key,value in labels.items() if cl in value]
-    for vocab in vocabDict.items():
-        vocabDict[vocab[0]] = 0
+    for vocab,c in vocabDict.items():
+        vocabDict[vocab] = 0
+        if(vocab == "बीजेपी"):
+            print(""+ vocab)
+        countWord = 0
         for id in reviewIds:
             ll=(reviewsDict[id])
-            countWord = reviewsDict[id].count(" "+vocab[0]+" ")
-            vocabDict[vocab[0]] += countWord
+            countWord = reviewsDict[id].count(" "+vocab+" ")
+            vocabDict[vocab] = vocabDict[vocab] + countWord
             countTotal += countWord
+            #if(vocab == "बीजेपी" and countWord > 0):
+                #print("in it" + str(countWord))
+        # print(vocab[0] + " " + str(countWord))
+
+    if len(totalDict) == 0:
+        # totalDict = vocabDict
+        for x,y in vocabDict.items():
+            totalDict[x] = y
+        print(str(totalDict))
+    else:
+        for a,b in vocabDict.items():
+            if a in totalDict:
+                print(a)
+                x = totalDict[a]
+                totalDict[a] = x+b
+                totalWords += totalDict[a]
+            else:
+                print(" ")
+
 
     for vocab in vocabDict.items():
         if vocab[0] not in probabilityDict:
@@ -70,6 +92,15 @@ for cl in classes:
             prob = probabilityDict[vocab[0]]
             prob.append((vocab[1]+1)/(countTotal + len(vocabDict)))
             probabilityDict[vocab[0]] = prob
+
+fx = codecs.open("nbmodel2.txt" , "w+", encoding="utf-8")
+checkProb = 0
+for word, val in totalDict.items():
+    # totalDict[word] = math.log(val, 10) - math.log(totalWords, 10)
+    totalDict[word] = math.log((val/totalWords), 10)
+    # totalDict[word] = (val / totalWords)
+    fx.write(word + "\t" + str(totalDict[word]) + "\n")
+
 
 f = codecs.open("nbmodel.txt" , "w+", encoding="utf-8")
 f.write("Prior Probabilities \n")
