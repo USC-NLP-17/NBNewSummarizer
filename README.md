@@ -1,10 +1,13 @@
 # NBNewSummarizer
 
 ###Steps to execute summarizer
-####Supervised
+### Supervised
 * python tokenizer.py nbSummarizer.py nblearn.py nbclassify.py
 * python mainEval.py (for sentence-to-sentence matching evaluation)
 
+### Unsupervised
+* python tokenizer.py summarizer.py
+* python mainEval.py (for sentence-to-sentence matching evaluation)
 
 
 ### Contributors:
